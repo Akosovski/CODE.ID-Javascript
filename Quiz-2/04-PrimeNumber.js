@@ -1,14 +1,26 @@
 
 function showPrimeNumber(n){
-
+    for(let i = 0; i < n + 1; i++){
+        if (isPrime(i)) {
+            console.log(i);
+        }
+    }
 }
 
-function isPrime(n){
-
-
+function isPrime(no){ 
+    if (no < 2) {
+        return false;
+      }
+      for (let i = 2; i < no; i++) {
+        if (no % i == 0) {
+          return false;
+        }
+      }
+      return true;
 }
 
 console.log(showPrimeNumber(100));
+
 /**
 
 2	3	5	7	11
