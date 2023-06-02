@@ -11,12 +11,12 @@ function citiesSlice(arrays, cityBetween) {
     for (let i = 0; i < arrays.length; i++) {
         if (arrays[i] === cityBetween) {
             beda_depan = i;
-            console.log(beda_depan);
+            // console.log(beda_depan);
             beda_belakang = arrays.length - 1 - i;
-            console.log(beda_belakang);
+            // console.log(beda_belakang);
         }
     }
-    return arrays.slice(2);
+    return arrays.slice(beda_depan, beda_belakang);
 }
 
 console.log(citiesSlice(cities,"jakarta"));
