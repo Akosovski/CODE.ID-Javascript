@@ -14,7 +14,7 @@ create table T_AGENT (
 	AGENT_CODE varchar(15),
 	AGENT_NAME varchar(15),
 	AGENT_OFFICE varchar(15),
-	BASIC_COMMISSION money
+	BASIC_COMMISSION integer
 );
 
 create table T_CLIENT (
@@ -49,7 +49,12 @@ insert into T_POLICY (POLICY_NUMBER, POLICY_SUBMIT_DATE, PREMIUM, DISCOUNT, COMM
 (004, '2018-1-25', 4000000, 10, 200000, 'CL003', 'AG002', 'PROPOSAL'),
 (005, '2018-1-25', 2625000, 10, 131250, 'CL004', 'AG002', 'PROPOSAL');
 
+drop table T_POLICY, T_AGENT, T_CLIENT;
+
 -- Bagian A
+
+select * FROM T_POLICY right join T_CLIENT on T_POLICY.CLIENT_NUMBER = T_CLIENT.CLIENT_NUMBER
+where T_POLICY.POLICY_SUBMIT_DATE > '2018-1-15' and TO_CHAR(T_CLIENT.BIRTH_DATE, 'Month') = 'September';
 
 -- Bagian B
 
@@ -58,6 +63,24 @@ where T_AGENT.AGENT_OFFICE = 'JAKARTA' and T_POLICY.POLICY_STATUS = 'INFORCE';
 
 -- Bagian C
 
+update T_AGENT
+set BASIC_COMMISSION = T_POLICY.COMMISSION / T_POLICY.PREMIUM * 100
+from T_POLICY;
+
 -- Bagian D
 
+update T_POLICY
+set POLICY_DUE_DATE = date_trunc('month', T_POLICY.POLICY_SUBMIT_DATE) + interval '1 month' + interval '1 month' - interval '1 day'
+from (
+	select POLICY_NUMBER from T_POLICY
+	group by POLICY_NUMBER
+) as subquery
+where T_POLICY.POLICY_NUMBER = subquery.POLICY_NUMBER;
+
 -- Bagian E
+
+select * 
+from (
+	select T_POLICY.PREMIUM - T_POLICY.PREMIUM * T_POLICY.DISCOUNT / 100 h from T_POLICY
+	where round(T_POLICY.PREMIUM::numeric::integer) < 1000000 order by T_POLICY.PREMIUM
+) as subquery;
